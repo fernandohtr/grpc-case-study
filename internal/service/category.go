@@ -94,3 +94,31 @@ func (c *CategoryService) CreateCategoryStream(stream pb.CategoryService_CreateC
 		})
 	}
 }
+
+func (c *CategoryService) CreateCategoryStreamBidirectional(stream pb.CategoryService_CreateCategoryStreamBidirectionalServer) error {
+	for {
+		category, error := stream.Recv()
+		if error == io.EOF {
+			return nil
+		}
+
+		if error != nil {
+			return error
+		}
+
+		categoryResult, error := c.CategoryDB.Create(category.Name, category.Description)
+		if error != nil {
+			return status.Errorf(codes.Internal, "Error to create category: %v", error)
+		}
+
+		categoryResponse := &pb.Category{
+			Id:          categoryResult.ID,
+			Name:        categoryResult.Name,
+			Description: categoryResult.Description,
+		}
+
+		if error := stream.Send(categoryResponse); error != nil {
+			return error
+		}
+	}
+}
