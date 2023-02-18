@@ -17,7 +17,7 @@ func NewCategoryService(categoryDB database.Category) *CategoryService {
 	return &CategoryService{CategoryDB: categoryDB}
 }
 
-func (c *CategoryService) CreateCategory(context context.Context, input *pb.CreateCategoryRequest) (*pb.CategoryResponse, error) {
+func (c *CategoryService) CreateCategory(context context.Context, input *pb.CreateCategoryRequest) (*pb.Category, error) {
 	category, error := c.CategoryDB.Create(input.Name, input.Description)
 	if error != nil {
 		return nil, status.Errorf(codes.Internal, "Error to create category: %v", error)
@@ -29,5 +29,5 @@ func (c *CategoryService) CreateCategory(context context.Context, input *pb.Crea
 		Description: category.Description,
 	}
 
-	return &pb.CategoryResponse{Category: categoryResponse}, nil
+	return categoryResponse, nil
 }
