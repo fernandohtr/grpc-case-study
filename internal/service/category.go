@@ -1,6 +1,8 @@
 package service
 
 import (
+	"io"
+
 	"github.com/fernandohtr/grpc-case-study/internal/database"
 	"github.com/fernandohtr/grpc-case-study/internal/pb"
 	"golang.org/x/net/context"
@@ -65,4 +67,30 @@ func (c *CategoryService) GetCategory(context context.Context, input *pb.Categor
 	}
 
 	return categoryResponse, nil
+}
+
+func (c *CategoryService) CreateCategoryStream(stream pb.CategoryService_CreateCategoryStreamServer) error {
+	categories := &pb.CategoryList{}
+
+	for {
+		category, error := stream.Recv()
+		if error == io.EOF {
+			return stream.SendAndClose(categories)
+		}
+
+		if error != nil {
+			return error
+		}
+
+		categoryResult, error := c.CategoryDB.Create(category.Name, category.Description)
+		if error != nil {
+			return status.Errorf(codes.Internal, "Error to create category: %v", error)
+		}
+
+		categories.Categories = append(categories.Categories, &pb.Category{
+			Id:          categoryResult.ID,
+			Name:        categoryResult.Name,
+			Description: categoryResult.Description,
+		})
+	}
 }
