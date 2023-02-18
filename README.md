@@ -22,3 +22,25 @@ Run the client
 ```
 make client
 ```
+
+## Examples
+
+### Create Category
+
+![screenshot-create-category](/docs/img/createCategory.png)
+
+### List Category
+
+![screenshot-list-category](/docs/img/listCategory.png)
+
+### Get Category
+
+![screenshot-get-category](/docs/img/getCategory.png)
+
+### Create Category Stream
+
+![screenshot-create-category-stream](/docs/img/createCategoryStream.png)
+
+### Create Category Stream Bidirectional
+
+![screenshot-create-category-stream-bidirectional](/docs/img/createCategoryStreamBidirectional.png)
