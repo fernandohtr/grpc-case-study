@@ -31,3 +31,23 @@ func (c *CategoryService) CreateCategory(context context.Context, input *pb.Crea
 
 	return categoryResponse, nil
 }
+
+func (c *CategoryService) ListCategory(context context.Context, input *pb.Blank) (*pb.CategoryList, error) {
+	categories, error := c.CategoryDB.FindAll()
+	if error != nil {
+		return nil, status.Errorf(codes.Internal, "Error to list categories: %v", error)
+	}
+
+	var categoriesResponse []*pb.Category
+
+	for _, category := range categories {
+		categoryResponse := &pb.Category{
+			Id:          category.ID,
+			Name:        category.Name,
+			Description: category.Description,
+		}
+		categoriesResponse = append(categoriesResponse, categoryResponse)
+	}
+
+	return &pb.CategoryList{Categories: categoriesResponse}, nil
+}
