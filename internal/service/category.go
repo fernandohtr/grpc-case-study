@@ -1,8 +1,8 @@
 package service
 
 import (
+	"github.com/fernandohtr/grpc-case-study/internal/database"
 	"github.com/fernandohtr/grpc-case-study/internal/pb"
-	"github.com/fernandohtr/grpc-case-study/internal/repository/database"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -10,10 +10,10 @@ import (
 
 type CategoryService struct {
 	pb.UnimplementedCategoryServiceServer
-	CategoryDB database.Categoty
+	CategoryDB database.Category
 }
 
-func NewCategoryService(categoryDB database.Categoty) *CategoryService {
+func NewCategoryService(categoryDB database.Category) *CategoryService {
 	return &CategoryService{CategoryDB: categoryDB}
 }
 
